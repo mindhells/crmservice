@@ -23,6 +23,7 @@
   "homepage": "https://github.com/mindhells/crmservice#readme",
   "dependencies": {
     "apollo-server": "^2.3.2",
+    "bcryptjs": "^2.4.3",
     "graphql": "^14.1.1",
     "mongoose": "^5.4.6"
   }

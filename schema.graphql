@@ -1,12 +1,17 @@
 type Query {
     customer(id: String!): Customer
     customers: [Customer!]!
+    user(id: String!): User
+    users: [User!]!
 }
 
 type Mutation {
     addCustomer(input: CustomerInput!): Customer
     editCustomer(id: String!, input: CustomerInput!): Customer
     deleteCustomer(id: String!): Customer
+    addUser(input: UserInput!): User
+    editUser(id: String!, input: UserInput!): User
+    deleteUser(id: String!): User
 }
 
 input CustomerInput {
@@ -18,4 +23,21 @@ type Customer {
     id: ID!
     name: String!
     surname: String!
+}
+
+enum UserRole {
+    USER,
+    ADMIN
+}
+
+type User {
+    id: ID!
+    email: String!
+    role: UserRole!
+}
+
+input UserInput {
+    email: String
+    password: String
+    role: UserRole = USER
 }
