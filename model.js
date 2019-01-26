@@ -14,7 +14,17 @@ const CustomerSchema = new mongoose.Schema({
     surname: {
         type: String,
         required: true
-    }
+    },
+    createdBy: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+    },
+    updatedBy: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+    },
 })
 
 CustomerSchema.set('toObject', { virtuals: true })

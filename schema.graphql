@@ -28,6 +28,8 @@ type Customer {
     id: ID!
     name: String!
     surname: String!
+    createdBy: User!
+    updatedBy: User!
 }
 
 enum UserRole {

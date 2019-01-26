@@ -5,10 +5,12 @@ module.exports = {
     Query: {
         async customer(_, { id }) {
             const customer = await Customer.findById(id)
+            .populate('createdBy').populate('updatedBy')
             return customer ? customer.toObject() : null
         },
         async customers() {
             const customers = await Customer.find()
+            .populate('createdBy').populate('updatedBy')
             return customers.map(customer => customer.toObject())
         },
         async user(_, { id }) {
@@ -28,16 +30,23 @@ module.exports = {
         }
     },
     Mutation: {
-        async addCustomer(_, { input }) {
-            const customer = await Customer.create(input)
+        async addCustomer(_, { input }, context) {            
+            const customer = await Customer.create({
+                createdBy: context.user,
+                updatedBy: context.user,
+                ...input
+            })
             return customer.toObject()
         },
-        async editCustomer(_, { id, input }) {
-            const customer = await Customer.findByIdAndUpdate(id, input,  { new: true })
+        async editCustomer(_, { id, input }, context) {
+            const customer = await Customer
+            .findByIdAndUpdate(id, {  updatedBy: context.user, ...input },  { new: true })
+            .populate('createdBy').populate('updatedBy')
             return customer ? customer.toObject() : null 
         },
         async deleteCustomer(_, { id }) {
             const customer = await Customer.findByIdAndDelete(id)
+            .populate('createdBy').populate('updatedBy')
             return customer ? customer.toObject() : null 
         },
         async addUser(_, { input }) {
