@@ -1,0 +1,2 @@
+# crmservice
+Synthetic GraphQL API
