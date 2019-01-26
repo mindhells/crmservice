@@ -3,20 +3,20 @@ directive @requireAuth(
 ) on FIELD_DEFINITION
 
 type Query {
-    customer(id: String!): Customer
+    customer(id: String!): Customer @requireAuth(role: USER)
     customers: [Customer!]! @requireAuth(role: USER)
-    user(id: String!): User
+    user(id: String!): User @requireAuth(role: ADMIN)
     users: [User!]! @requireAuth(role: ADMIN)
     login(email:String!, password:String!): String
 }
 
 type Mutation {
-    addCustomer(input: CustomerInput!): Customer
-    editCustomer(id: String!, input: CustomerInput!): Customer
-    deleteCustomer(id: String!): Customer
-    addUser(input: UserInput!): User
-    editUser(id: String!, input: UserInput!): User
-    deleteUser(id: String!): User
+    addCustomer(input: CustomerInput!): Customer @requireAuth(role: USER)
+    editCustomer(id: String!, input: CustomerInput!): Customer @requireAuth(role: USER)
+    deleteCustomer(id: String!): Customer @requireAuth(role: USER)
+    addUser(input: UserInput!): User @requireAuth(role: ADMIN)
+    editUser(id: String!, input: UserInput!): User @requireAuth(role: ADMIN)
+    deleteUser(id: String!): User @requireAuth(role: ADMIN)
 }
 
 input CustomerInput {

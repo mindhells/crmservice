@@ -52,7 +52,8 @@ module.exports = {
             }
             return user
         },
-        async deleteUser(_, { id }) {
+        async deleteUser(_, { id }, context) {
+            if (context.user.id === id) throw Error(`You can't delete yourself`)
             const user = await User.findByIdAndDelete(id)
             return user ? user.toObject() : null
         }
