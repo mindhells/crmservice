@@ -1,0 +1,21 @@
+type Query {
+    customer(id: String!): Customer
+    customers: [Customer!]!
+}
+
+type Mutation {
+    addCustomer(input: CustomerInput!): Customer
+    editCustomer(id: String!, input: CustomerInput!): Customer
+    deleteCustomer(id: String!): Customer
+}
+
+input CustomerInput {
+    name: String
+    surname: String
+}
+
+type Customer {
+    id: ID!
+    name: String!
+    surname: String!
+}
