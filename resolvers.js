@@ -1,4 +1,5 @@
 const { Customer, User } = require('./model')
+const jwt = require('jsonwebtoken')
 
 module.exports = {
     Query: {
@@ -17,6 +18,13 @@ module.exports = {
         async users() {
             const users = await User.find()
             return users.map(user => user.toObject())
+        },
+        async login(_, { email, password }) {
+            const user = await User.findOne({ email })
+            if (user && user.verifyPassword(password)) {
+                return jwt.sign({ user: user.id }, process.env.JWT_SECRET)
+            }
+            throw Error('Login failed')
         }
     },
     Mutation: {

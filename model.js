@@ -43,6 +43,10 @@ UserSchema.virtual('password').set(function(value) {
     this.hash = bcrypt.hashSync(value, salt)
 })
 
+UserSchema.method('verifyPassword', function(plainPassword) {
+    return bcrypt.compareSync(plainPassword, this.hash)
+})
+
 module.exports = {
     Customer: mongoose.model('Customer', CustomerSchema),
     User: mongoose.model('User', UserSchema)

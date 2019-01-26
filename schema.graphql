@@ -1,8 +1,13 @@
+directive @requireAuth(
+  role: UserRole! = USER,
+) on FIELD_DEFINITION
+
 type Query {
     customer(id: String!): Customer
-    customers: [Customer!]!
+    customers: [Customer!]! @requireAuth(role: USER)
     user(id: String!): User
-    users: [User!]!
+    users: [User!]! @requireAuth(role: ADMIN)
+    login(email:String!, password:String!): String
 }
 
 type Mutation {

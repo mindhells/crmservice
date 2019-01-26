@@ -9,6 +9,7 @@ services:
       - "4000:4000"
     environment:
       MONGODB_URI: ${MONGODB_URI}
+      JWT_SECRET: ${JWT_SECRET}
     volumes:
       - .:/app
       - /app/node_modules
