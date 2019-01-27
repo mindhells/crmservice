@@ -2,6 +2,8 @@ directive @requireAuth(
   role: UserRole! = USER,
 ) on FIELD_DEFINITION
 
+scalar Upload
+
 type Query {
     customer(id: String!): Customer @requireAuth(role: USER)
     customers: [Customer!]! @requireAuth(role: USER)
@@ -22,12 +24,14 @@ type Mutation {
 input CustomerInput {
     name: String
     surname: String
+    photo: Upload
 }
 
 type Customer {
     id: ID!
     name: String!
     surname: String!
+    photo: File
     createdBy: User!
     updatedBy: User!
 }
@@ -47,4 +51,10 @@ input UserInput {
     email: String
     password: String
     role: UserRole = USER
+}
+
+type File {
+    filename: String
+    mimetype: String
+    data: String
 }

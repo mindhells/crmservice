@@ -1,16 +1,29 @@
-const { Customer, User } = require('./model')
+const { Customer, User, File } = require('./model')
 const jwt = require('jsonwebtoken')
+
+const uploadFile = async (upload) => {
+    const { createReadStream, filename, mimetype } = await upload
+    const stream = createReadStream()
+    const chuncks = []
+    await new Promise ((resolve, reject) => {
+        stream.on('data', chunk => chuncks.push(chunk))
+        stream.on('end', resolve)
+        stream.on('error', reject)
+    })
+    const data = Buffer.concat(chuncks)
+    return await File.create({ data, filename, mimetype })       
+}
 
 module.exports = {
     Query: {
         async customer(_, { id }) {
             const customer = await Customer.findById(id)
-            .populate('createdBy').populate('updatedBy')
+            .populate('createdBy').populate('updatedBy').populate('photo')
             return customer ? customer.toObject() : null
         },
         async customers() {
             const customers = await Customer.find()
-            .populate('createdBy').populate('updatedBy')
+            .populate('createdBy').populate('updatedBy').populate('photo')
             return customers.map(customer => customer.toObject())
         },
         async user(_, { id }) {
@@ -30,7 +43,10 @@ module.exports = {
         }
     },
     Mutation: {
-        async addCustomer(_, { input }, context) {            
+        async addCustomer(_, { input }, context) {         
+            if (input.photo) {
+                input.photo = await uploadFile(input.photo)
+            }
             const customer = await Customer.create({
                 createdBy: context.user,
                 updatedBy: context.user,
@@ -39,13 +55,16 @@ module.exports = {
             return customer.toObject()
         },
         async editCustomer(_, { id, input }, context) {
+            if (input.photo) {
+                input.photo = await uploadFile(input.photo)
+            }
             const customer = await Customer
             .findByIdAndUpdate(id, {  updatedBy: context.user, ...input },  { new: true })
             .populate('createdBy').populate('updatedBy')
             return customer ? customer.toObject() : null 
         },
         async deleteCustomer(_, { id }) {
-            const customer = await Customer.findByIdAndDelete(id)
+            const customer = await Customer.findOneAndRemove({ _id: id })
             .populate('createdBy').populate('updatedBy')
             return customer ? customer.toObject() : null 
         },
