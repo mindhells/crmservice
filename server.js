@@ -1,4 +1,4 @@
-const { ApolloServer, makeExecutableSchema } = require('apollo-server')
+const { ApolloServer, makeExecutableSchema, ApolloError } = require('apollo-server')
 const fs = require('fs')
 const path = require('path')
 const jwt = require('jsonwebtoken')
@@ -19,7 +19,7 @@ const server = new ApolloServer({
     schema,
     formatError(error) {
         console.log(error)
-        return error
+        return new ApolloError('Internal server error', 500)
     },
     async context({ req }) {
         const token = req && req.headers && req.headers.authorization
