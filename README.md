@@ -20,7 +20,10 @@ this will create the image described in Dockerfile (if not created) and start th
 Once the nodejs is ready you can navigate to http://localhost:4000 to load the apollo server playground
 
 #### Security
-You will need to create and admin user the 1st time
+You will need to create and admin user the 1st time. You can do it this way:
+```js
+docker-compose exec api bash -c "node setup.js demo@email.com custompassword"
+```
 
 We use JWT for creating a token when the user logs in. The client must send this token as the authorization header to identify himself.
 
