@@ -15,11 +15,13 @@ const schema = makeExecutableSchema({
     }
 })
 
-const server = new ApolloServer({ 
+const server = new ApolloServer({
     schema,
     formatError(error) {
         console.log(error)
-        return new ApolloError('Internal server error', 500)
+        // return new ApolloError('Internal server error', 500)
+        delete error.extensions.exception
+        return error
     },
     async context({ req }) {
         const token = req && req.headers && req.headers.authorization
